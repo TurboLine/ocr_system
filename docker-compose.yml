@@ -1,0 +1,15 @@
+version: '3'
+services:
+  text-selection:
+    container_name: text-selection
+    restart: always
+    build: text_selection/
+    ports:
+     - "5000:5001"
+
+  character-recognition:
+    container_name: character-recognition
+    restart: always
+    build: character_recognition/
+    ports:
+     - "5000:5002"
