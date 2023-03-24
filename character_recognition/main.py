@@ -19,7 +19,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route('/ocr_system/api/v1.0/read_text', methods=['POST'])
+@app.route('/character_recognition/api/v1.0/read_text', methods=['POST'])
 def read_text():
     if 'file' not in request.files:
         flash('No file part')
