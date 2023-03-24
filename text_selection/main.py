@@ -19,11 +19,6 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route('/')
-def hello():
-    return 'Hello World!'
-
-
 @app.route('/text_selection/api/v1.0/detect', methods=['POST'])
 def detect_text():
     if 'file' not in request.files:
