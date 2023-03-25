@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os
+import io
 
 from flask import Flask, request, flash, redirect, jsonify
 
@@ -11,7 +11,6 @@ UPLOAD_FOLDER = '.'
 NAME_TEMP_PIC = 'temp_pic'
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 def allowed_file(filename):
@@ -29,9 +28,11 @@ def read_text():
         flash('No selected file')
         return redirect(request.url)
     if file and allowed_file(file.filename):
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], NAME_TEMP_PIC))
-        answer = select_text(os.path.join(app.config['UPLOAD_FOLDER'], NAME_TEMP_PIC))
-        return jsonify({"text_boxes": answer})
+        img_file = io.BytesIO()
+        file.save(img_file)
+        answer = select_text(img_file.getvalue())
+        img_file.close()
+        return jsonify({"text": answer})
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os
+import io
 
 from flask import Flask, request, flash, redirect, jsonify
 
@@ -29,9 +29,11 @@ def detect_text():
         flash('No selected file')
         return redirect(request.url)
     if file and allowed_file(file.filename):
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], NAME_TEMP_PIC))
-        answer = select_text(os.path.join(app.config['UPLOAD_FOLDER'], NAME_TEMP_PIC))
-        return jsonify({"text": answer})
+        img_file = io.BytesIO()
+        file.save(img_file)
+        answer = select_text(img_file.getvalue())
+        img_file.close()
+        return jsonify({"text_boxes": answer})
 
 
 if __name__ == '__main__':
