@@ -5,6 +5,7 @@ from flask import Flask, request, flash, redirect, jsonify, abort
 from werkzeug.utils import secure_filename
 
 from client.classes.picture import Picture
+from client.classes.pictures import Pictures
 
 LANGUAGES = ['ru', 'en']
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -32,7 +33,7 @@ def recognize():
 
     if not request.json:
         abort(400)
-    if not 'nickname' in request.json and type(request.json['nickname'] is str):
+    if 'nickname' not in request.json and type(request.json['nickname'] is not str):
         abort(400)
     if 'file' not in request.files:
         flash('No file part')
@@ -48,22 +49,29 @@ def recognize():
             nickname=request.json['nickname'],
             time_application=datetime.now(),
             file_name=filename,
-            file_url=os.path.join(app.config['UPLOAD_FOLDER'], filename),
-            text_list=[],
+            file_path=os.path.join(app.config['UPLOAD_FOLDER'], filename)
         )
-        return jsonify()
+        pic.get_text_selection()
+        pic.get_text()
+        id_pic = pic.db_save()
+        return jsonify({'id_picture': id_pic})
 
 
 @app.route('/client/api/v1.0/get_texts', methods=['GET'])
 def get_texts():
     """
     Метод GET /get_texts получает из бд тексты из выбранной
-    картинки. В БД должна записаться информация: пользователь
-    (Авторизация не подразумевается, присылать вместе с запросом),
-    время обращения, имя файла и выделенные тексты (учтите,
-    на картинке может быть больше одного текста), картинки можно
-    хранить на диске, тогда в бд должен лежать путь до картинки.
+    картинки.
     """
-    pass
+    pictures = Pictures()
+    pictures.db_load_all()
+    answer_json = pictures.get_pictures()
+    return jsonify(answer_json)
 
 
+@app.route('/client/api/v1.0/get_texts/<int:pic_id>', methods=['GET'])
+def get_task(pic_id):
+    pic = Pictures.db_load_one(pic_id)
+    if pic is None:
+        abort(404)
+    return jsonify(pic.get_picture())
