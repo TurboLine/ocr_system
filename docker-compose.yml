@@ -5,11 +5,11 @@ services:
     restart: always
     build: text_selection/
     ports:
-     - "5000:5001"
+     - "5001:5000"
 
   character-recognition:
     container_name: character-recognition
     restart: always
     build: character_recognition/
     ports:
-     - "5000:5002"
+     - "5002:5000"
