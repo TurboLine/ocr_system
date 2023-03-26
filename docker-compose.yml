@@ -13,3 +13,20 @@ services:
     build: character_recognition/
     ports:
      - "5002:5000"
+
+  client:
+    container_name: client
+    restart: always
+    build: client/
+    env_file:
+      - client/.env
+    ports:
+     - "5003:5000"
+
+  postgres:
+      container_name: postgres
+      restart: always
+      build: postgres/
+      env_file: postgres/.env
+      ports:
+        - "5003:5432"
