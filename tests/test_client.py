@@ -1,5 +1,5 @@
 import requests
-URL_1 = 'http://127.0.0.1:5001/text_selection/api/v1.0/detect'
+URL_1 = 'http://127.0.0.1:5000/client/api/v1.0/recognize'
 PATH_TEST_FILE_1 = 'tests/test_pic_1.jpg'
 
 
@@ -8,6 +8,7 @@ def test_1():
     # помещаем объект файла в словарь
     # в качестве значения с ключом 'file'
     files = {'file': fp}
+    payload = {"nickname": "alex"}
     # передаем созданный словарь аргументу `files`
     resp = requests.post(URL_1, files=files)
     fp.close()

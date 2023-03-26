@@ -1,5 +1,5 @@
 import requests
-URL_1 = 'http://127.0.0.1:5000/character_recognition/api/v1.0/read_text'
+URL_1 = 'http://127.0.0.1:5002/character_recognition/api/v1.0/read_text'
 PATH_TEST_FILE_1 = 'tests/test_pic_1.jpg'
 
 
