@@ -4,8 +4,8 @@ from datetime import datetime
 from flask import Flask, request, flash, redirect, jsonify, abort
 from werkzeug.utils import secure_filename
 
-from client.classes.picture import Picture
-from client.classes.pictures import Pictures
+from classes.picture import Picture
+from classes.pictures import Pictures
 
 LANGUAGES = ['ru', 'en']
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -30,7 +30,6 @@ def recognize():
     отправляем на сервис распознавания, получаем ответ и
     записываем в бд.
     """
-
     if not request.json:
         abort(400)
     if 'nickname' not in request.json and type(request.json['nickname'] is not str):
@@ -71,7 +70,11 @@ def get_texts():
 
 @app.route('/client/api/v1.0/get_texts/<int:pic_id>', methods=['GET'])
 def get_task(pic_id):
-    pic = Pictures.db_load_one(pic_id)
+    pic = Picture.db_load(pic_id)
     if pic is None:
         abort(404)
     return jsonify(pic.get_picture())
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
