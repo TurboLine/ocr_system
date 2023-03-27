@@ -18,15 +18,14 @@ services:
     container_name: client
     restart: always
     build: client/
-    env_file:
-      - client/.env
+    env_file: client/.env
     ports:
      - "5003:5000"
 
   postgres:
-      container_name: postgres
-      restart: always
-      build: postgres/
-      env_file: postgres/.env
-      ports:
-        - "5004:5432"
+    container_name: postgres
+    restart: always
+    build: postgres/
+    env_file: postgres/.env
+    ports:
+      - "5004:5432"
