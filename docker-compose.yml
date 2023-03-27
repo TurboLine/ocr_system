@@ -29,4 +29,4 @@ services:
       build: postgres/
       env_file: postgres/.env
       ports:
-        - "5003:5432"
+        - "5004:5432"
