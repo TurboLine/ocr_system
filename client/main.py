@@ -1,5 +1,5 @@
-import os
 from datetime import datetime
+from os import path
 
 from flask import Flask, request, flash, redirect, jsonify, abort
 from werkzeug.utils import secure_filename
@@ -43,12 +43,12 @@ def recognize():
         return redirect(request.url)
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file.save(path.join(app.config['UPLOAD_FOLDER'], filename))
         pic = Picture(
             nickname=request.json['nickname'],
             time_application=datetime.now(),
             file_name=filename,
-            file_path=os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file_path=path.join(app.config['UPLOAD_FOLDER'], filename)
         )
         pic.get_text_selection()
         pic.get_text()

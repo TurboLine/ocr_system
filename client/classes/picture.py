@@ -1,6 +1,7 @@
 import io
 from datetime import datetime
 from dataclasses import dataclass, field
+from os import environ
 from typing import Optional, List
 
 import psycopg2
@@ -8,9 +9,6 @@ import requests
 from PIL import Image
 
 from scripts.connect_db import PG_CONNECT
-
-URL_TEXT_SELECTION = 'http://127.0.0.1:5001/text_selection/api/v1.0/detect'
-URL_CHARACTER_RECOGNITION = 'http://127.0.0.1:5000/character_recognition/api/v1.0/read_text'
 
 SQL_INSERT_PICTURE = \
     "INSERT INTO pictures (nickname, time_application, file_name, file_path) VALUES (%s, %s, %s, %s) RETURNING id;"
@@ -70,7 +68,7 @@ class Picture:
     def get_text_selection(self):
         fp = open(self.file_path, 'rb')
         files = {'file': fp}
-        r = requests.post(URL_TEXT_SELECTION, files=files)
+        r = requests.post(environ.get("URL_TEXT_SELECTION"), files=files)
         if r.ok:
             r_dict = r.json()
             if r_dict.get("code") == 200:
@@ -86,7 +84,7 @@ class Picture:
                 img_crop = img.crop((text_box[0][0], text_box[0][1], text_box[2][0], text_box[2][1]))
                 img_crop_byte = io.BytesIO()
                 img_crop.save(img_crop_byte)
-                r = requests.post(URL_CHARACTER_RECOGNITION, files=img_crop_byte.getvalue())
+                r = requests.post(environ.get('URL_CHARACTER_RECOGNITION'), files=img_crop_byte.getvalue())
                 if r.ok:
                     r_dict = r.json()
                     if r_dict.get("code") == 200:
